@@ -2,5 +2,7 @@ Python Alarm Clock
 
 A simple class that uses the winsound package in standard lib to play an alarm bell (.wav) at time set by user.
 
+Questions or comments, please send to tjtrebat@gmail.com
+
 
 
