@@ -1,4 +1,4 @@
-import math, time
+import time
 import winsound
 from Tkinter import *
 
@@ -17,9 +17,9 @@ class Alarm:
         self.after_method = None
         self.alarm = Label(frame, text=self.alarm_set_times[0])
         self.alarm.grid(row=4, column=4)
-        for i in range(1, 10):
-            Button(frame, text=i, command= lambda x = i:self.num_click_handler(x)).grid(row=int(math.ceil((i + 0.0) / 3)), column=(i - 1) % 3)
-        Button(frame, text="0", command= lambda x = 0:self.num_click_handler(x)).grid(row=4, column=1)
+        for i in range(9):
+            Button(frame, text=(i + 1), command= lambda x = (i + 1):self.num_click_handler(x)).grid(row=(i / 3), column=(i % 3))
+        Button(frame, text="0", command= lambda x = 0:self.num_click_handler(x)).grid(row=3, column=1)
         frame = Frame(root)
         frame.pack()
         Button(frame, text="Set Alarm Time", command=self.set_alarm_time).grid(row=5, column=1)
