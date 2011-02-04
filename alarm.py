@@ -1,35 +1,45 @@
+__author__ = 'Tom'
+
 import time
 import winsound
 from Tkinter import *
 
 class Alarm:
     def __init__(self, root):
-        frame = Frame(root, padx=10, pady=10)
-        frame.pack()
-        Label(frame, text="Current Time").grid(row=0, column=4)
-        self.curtime = Label(frame, text=time.strftime("%H:%M:%S"))
-        self.curtime.grid(row=1, column=4)
-        Label(frame, text="Alarm Time").grid(row=3, column=4)
+        self.frame = Frame(root, padx=10, pady=10)
+        self.frame.pack()
+        self.root = root
         self.alarm_set_counter = 0
         self.alarm_btn_press = 0
         self.alarm_set_times = ["00:00", "  :  "]
         self.is_set_alarm = True
         self.after_method = None
-        self.alarm = Label(frame, text=self.alarm_set_times[0])
+        self.add_current_time()
+        self.add_alarm_time()
+        self.add_number_panel()
+        self.add_alarm_button()
+
+    def add_current_time(self):
+        Label(self.frame, text="Current Time").grid(row=0, column=4)
+        self.current_time = Label(self.frame, text=time.strftime("%H:%M:%S"))
+        self.current_time.grid(row=1, column=4)
+        self.current_time.after(200, self.tick)
+
+    def add_alarm_time(self):
+        Label(self.frame, text="Alarm Time").grid(row=3, column=4)
+        self.alarm = Label(self.frame, text=self.alarm_set_times[0])
         self.alarm.grid(row=4, column=4)
+
+    def add_number_panel(self):
         for i in range(9):
-            Button(frame, text=(i + 1), command= lambda x = (i + 1):self.num_click_handler(x)).grid(row=(i / 3), column=(i % 3))
-        Button(frame, text="0", command= lambda x = 0:self.num_click_handler(x)).grid(row=3, column=1)
-        frame = Frame(root)
-        frame.pack()
-        Button(frame, text="Set Alarm Time", command=self.set_alarm_time).grid(row=5, column=1)
-        self.curtime.after(200, self.tick)
-        
+            Button(self.frame, text=(i + 1), command= lambda x = (i + 1):self.num_click_handler(x)).grid(row=(i / 3), column=(i % 3))
+        Button(self.frame, text="0", command= lambda x = 0:self.num_click_handler(x)).grid(row=3, column=1)
+
     def num_click_handler(self, num):
         if not self.is_set_alarm:
-            alarmtime = self.alarm_set_times[0]
-            alarmtime = alarmtime[:self.alarm_btn_press] + str(num) + alarmtime[self.alarm_btn_press + 1:]
-            self.alarm_set_times[0] = alarmtime
+            alarm_time = self.alarm_set_times[0]
+            alarm_time = alarm_time[:self.alarm_btn_press] + str(num) + alarm_time[self.alarm_btn_press + 1:]
+            self.alarm_set_times[0] = alarm_time
             self.alarm_btn_press += 2 if self.alarm_btn_press == 1 else 1 
             if self.alarm_btn_press >= 5:
                 self.alarm.after_cancel(self.after_method)
@@ -37,10 +47,15 @@ class Alarm:
                 self.alarm_btn_press = 0
                 self.is_set_alarm = True
 
+    def add_alarm_button(self):
+        frame = Frame(self.root)
+        frame.pack()
+        Button(frame, text="Set Alarm Time", command=self.set_alarm_time).grid(row=5, column=1)
+
     def tick(self):
     	alarm_time = time.strftime("%H:%M:%S")
-        self.curtime.config(text=alarm_time)  
-        self.curtime.after(200, self.tick)
+        self.current_time.config(text=alarm_time)
+        self.current_time.after(200, self.tick)
         if self.is_set_alarm and self.after_method:
             if alarm_time[:-3] == self.alarm_set_times[0]:
             	self.create_sound()
