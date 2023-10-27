@@ -1,8 +1,11 @@
 __author__ = 'Tom'
 
 import time
-import winsound
+import pygame
 from Tkinter import *
+
+pygame.mixer.init()
+alarm_sound = pygame.mixer.Sound('alarm_clock_1.wav')
 
 class Alarm:
     """ A simple Alarm Clock Tk demonstration """
@@ -41,7 +44,8 @@ class Alarm:
                 
     def create_sound(self):
         """ Play alarm clock .wav file """
-        winsound.PlaySound("alarm_clock_1.wav", winsound.SND_ALIAS)
+        pygame.mixer.Sound.play(alarm_sound)
+        pygame.mixer.music.stop()
 
     def add_alarm_time(self):
         """ Add label for the alarm time """
@@ -88,5 +92,6 @@ class Alarm:
 
 if __name__ == '__main__':
     root = Tk()
+    root.title('Alarm Clock')
     alarm = Alarm(root)
     root.mainloop()
