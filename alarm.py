@@ -31,13 +31,13 @@ class Alarm:
     def tick(self):
         """ Updates current time label. Play sound if alarm
          has been set. """
-    	alarm_time = time.strftime("%H:%M:%S")
+        alarm_time = time.strftime("%H:%M:%S")
         self.current_time.config(text=alarm_time)
         self.current_time.after(200, self.tick)
         if self.is_set_alarm and self.after_method: # enter here if alarm has been set
             if alarm_time[:-3] == self.alarm_set_times[0]: # play sound if alarm time is current time
-            	self.create_sound()
-            	self.is_set_alarm = False
+                self.create_sound()
+                self.is_set_alarm = False
                 
     def create_sound(self):
         """ Play alarm clock .wav file """
