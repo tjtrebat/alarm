@@ -3,6 +3,7 @@ __author__ = 'Tom'
 import time
 import pygame
 from Tkinter import *
+from datetime import datetime, timedelta
 
 pygame.mixer.init()
 alarm_sound = pygame.mixer.Sound('alarm_clock_1.wav')
@@ -23,6 +24,7 @@ class Alarm:
         self.add_alarm_time()
         self.add_number_panel()
         self.add_alarm_button()
+        self.add_pomodoro_buttons()
 
     def add_current_time(self):
         """ Add label displaying current time """
@@ -89,6 +91,37 @@ class Alarm:
         self.alarm.config(text=self.alarm_set_times[self.alarm_set_counter % 2])
         self.alarm_set_counter += 1
         self.after_method = self.alarm.after(500, self.blink)
+
+    def add_pomodoro_buttons(self):
+        frame = Frame(self.root)
+        self.add_pomodoro_start(frame)
+        self.add_pomodoro_break(frame)
+        frame.pack()
+
+    def add_pomodoro_start(self, frame):
+        Button(frame, text='Start 25 min. Pomodoro', command=self.start_pomodoro).grid(row=6, column=1)
+
+    def add_pomodoro_break(self, frame):
+        Button(frame, text='Break Pomodoro', command=self.break_pomodoro).grid(row=7, column=1)
+
+    def start_pomodoro(self):
+        if self.after_method:
+            self.alarm.after_cancel(self.after_method)
+        alarm_time = datetime.now() + timedelta(minutes=25)
+        self.alarm_set_times[0] = alarm_time.strftime("%H:%M:%S")
+        self.alarm.config(text=self.alarm_set_times[0])
+        self.alarm_btn_press = 0
+        self.is_set_alarm = True
+
+    def break_pomodoro(self):
+        if self.after_method:
+            self.alarm.after_cancel(self.after_method)
+        alarm_time = datetime.now() + timedelta(minutes=5)
+        self.alarm_set_times[0] = alarm_time.strftime("%H:%M:%S")
+        self.alarm.config(text=self.alarm_set_times[0])
+        self.alarm_btn_press = 0
+        self.is_set_alarm = True        
+
 
 if __name__ == '__main__':
     root = Tk()
